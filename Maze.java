@@ -14,6 +14,7 @@ public class Maze {
     3. When the file is not found OR the file is invalid (not exactly 1 E and 1 S) then:
          throw a FileNotFoundException or IllegalStateException
   */
+
   public Maze(String filename) throws FileNotFoundException {
     File mazeFile = new File(filename); //finds File
     Scanner scan = new Scanner(mazeFile); //scan: used to find dimensions of Maze
@@ -40,8 +41,12 @@ public class Maze {
       }
       indexRow++; //moves onto next row as scan2 moves onto next row
     }
+
+    detectES();
   }
 
+  /*Returns the string that represents the maze
+  */
   public String toString() {
     String ret = "";
     for (int x = 0; x < maze.length; x++) {
@@ -53,16 +58,72 @@ public class Maze {
     return ret;
   }
 
+  //helper method detecting if maze has exactly 1 E and 1 S
+  private void detectES() throws IllegalStateException {
+    int checkE = 0;
+    int checkS = 0;
+    for (int x = 0; x < maze.length; x++) {
+      for (int y = 0; y < maze[0].length; y++) {
+        if (maze[x][y]=='E') checkE++;
+        if (maze[x][y]=='S') checkS++;
+      }
+    }
+    if (checkE != 1 || checkS != 1) throw new IllegalStateException();
+  }
+
+
+  private void wait(int millis){
+        try {
+            Thread.sleep(millis);
+        }
+        catch (InterruptedException e) {
+        }
+    }
+
+   public void setAnimate(boolean b){
+       animate = b;
+   }
+
+   public void clearTerminal(){
+       //erase terminal, go to top left of screen.
+       System.out.println("\033[2J\033[1;1H");
+   }
+
+  /*Wrapper Solve Function returns the helper function
+    We can assume that the file exists and is valid as the constructor exits when file is not found
+    Or when the number of E and S does not equate to 1
+  */
+  public int solve() {
+    findS();
+  }
+
+  private void findS() {
+    int XcorS, YcorS;
+    for (int x = 0; x < maze.length; x++) {
+      for (int y = 0; y < maze[0].length; y++) {
+        if (maze[x][y] == 'S') {
+          XcorS = x;
+          YcorS = y;
+          }
+        }
+      }
+    maze[XcorS][YcorS] = '@';
+  }
+
+
+
+
   public static void main(String[] args) {
     try {
-      Maze test = new Maze("Maze1.txt");
+      Maze test = new Maze("Maze2.txt");
       System.out.println(test);
+
     }
     catch (FileNotFoundException e) {
       System.out.println("File not found");
     }
   }
-}
+  }
 
 
 //count amt of lines
