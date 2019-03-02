@@ -4,6 +4,8 @@ public class Maze {
   private char[][] maze;
   private boolean animate;
 
+  private int startRow, startCol;
+
   /*Constructor loads a maze text file, and sets animate to false by default.
     1. The file contains a rectangular ascii maze, made with the following 4 characters:
       '#' - Walls - locations that cannot be moved onto
@@ -71,7 +73,6 @@ public class Maze {
     if (checkE != 1 || checkS != 1) throw new IllegalStateException();
   }
 
-
   private void wait(int millis){
         try {
             Thread.sleep(millis);
@@ -89,29 +90,45 @@ public class Maze {
        System.out.println("\033[2J\033[1;1H");
    }
 
-  /*Wrapper Solve Function returns the helper function
+  /*Wrapper Solve function returns the helper function
     We can assume that the file exists and is valid as the constructor exits when file is not found
     Or when the number of E and S does not equate to 1
   */
   public int solve() {
     findS();
+    return solve(startRow,startCol,1);
   }
 
+  //helper method finding the location of S, replaces it with @ and starts the path
   private void findS() {
-    int XcorS, YcorS;
+    int rowS = -1;
+    int colS = -1;
     for (int x = 0; x < maze.length; x++) {
       for (int y = 0; y < maze[0].length; y++) {
         if (maze[x][y] == 'S') {
-          XcorS = x;
-          YcorS = y;
+          rowS = x;
+          colS = y;
           }
         }
       }
-    maze[XcorS][YcorS] = '@';
+    maze[rowS][colS] = '@';
+    startRow = rowS;
+    startCol = colS;
   }
 
+  /*Recursive Solve (helper) function
+    A solved maze has a park marked with '@' from S to E
+    Returns the number of @ symbols from S to E when the maze is solved
+    Returns -1 when the maze has no solution
 
-
+    Postconditions:
+      S is replaced with '@' but the 'E' is NOT.
+      All visited spots that were not part of the solution are changed to '.'
+      ALl visited spots that are part of the solution are changed to '@'
+  */
+  private int solve(int row, int col, int countSigns) {
+    return -1;
+  }
 
   public static void main(String[] args) {
     try {
