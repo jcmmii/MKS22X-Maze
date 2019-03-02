@@ -131,7 +131,24 @@ public class Maze {
             clearTerminal();
             System.out.println(this);
             wait(20);
-        }
+      }
+    if(checkEnd(row,col)) return countSigns;
+    if (checkSpot(row,col) {
+      if (checkSpot(row+1,col)) {
+        return solve(row+1,col,countSigns+1);
+      }
+      if (checkSpot(row-1,col)) {
+        return solve(row-1,col,countSigns+1);
+      }
+      if (checkSpot(row,col+1)) {
+        return solve(row,col+1,countSigns+1);
+      }
+      if (checkSpot(row,col-1)) {
+        return solve(row,col-1,countSigns+1);
+      }
+    }
+    maze[row][col] = '.';
+    return -1;
   }
 
   private boolean checkSpot(int row, int col) {
@@ -144,10 +161,9 @@ public class Maze {
 
   private boolean checkEnd(int row, int col) {
     if (maze[row][col].equals('E') {
-      animate = false;
+      setanimate(false);
       return true;
   }
-
 
   public static void main(String[] args) {
     try {
