@@ -127,8 +127,27 @@ public class Maze {
       ALl visited spots that are part of the solution are changed to '@'
   */
   private int solve(int row, int col, int countSigns) {
-    return -1;
+    if (animate) {
+            clearTerminal();
+            System.out.println(this);
+            wait(20);
+        }
   }
+
+  private boolean checkSpot(int row, int col) {
+    if (maze[row][col].equals(' ') || maze[row][col].equals('S')) {
+      maze[row][col] = '@';
+      return true;
+    }
+    return false;
+  }
+
+  private boolean checkEnd(int row, int col) {
+    if (maze[row][col].equals('E') {
+      animate = false;
+      return true;
+  }
+
 
   public static void main(String[] args) {
     try {
