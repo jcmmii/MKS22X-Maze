@@ -16,7 +16,6 @@ public class Maze {
     3. When the file is not found OR the file is invalid (not exactly 1 E and 1 S) then:
          throw a FileNotFoundException or IllegalStateException
   */
-
   public Maze(String filename) throws FileNotFoundException {
     File mazeFile = new File(filename); //finds File
     Scanner scan = new Scanner(mazeFile); //scan: used to find dimensions of Maze
@@ -96,10 +95,10 @@ public class Maze {
   */
   public int solve() {
     findS();
-    return solve(startRow,startCol,1);
+    return solve(startRow,startCol,0);
   }
 
-  //helper method finding the location of S, replaces it with @ and starts the path
+  //helper method finding the location of S
   private void findS() {
     int rowS = -1;
     int colS = -1;
@@ -111,7 +110,6 @@ public class Maze {
           }
         }
       }
-    maze[rowS][colS] = '@';
     startRow = rowS;
     startCol = colS;
   }
@@ -126,56 +124,60 @@ public class Maze {
       All visited spots that were not part of the solution are changed to '.'
       ALl visited spots that are part of the solution are changed to '@'
   */
-  private int solve(int row, int col, int countSigns) {
+  private int solve(int row, int col, int count) {
+    int temp;
     if (animate) {
             clearTerminal();
             System.out.println(this);
-            wait(20);
-      }
-    if(checkEnd(row,col)) return countSigns;
-    if (checkSpot(row,col) {
-      if (checkSpot(row+1,col)) {
-        return solve(row+1,col,countSigns+1);
-      }
-      if (checkSpot(row-1,col)) {
-        return solve(row-1,col,countSigns+1);
-      }
-      if (checkSpot(row,col+1)) {
-        return solve(row,col+1,countSigns+1);
-      }
-      if (checkSpot(row,col-1)) {
-        return solve(row,col-1,countSigns+1);
-      }
+            wait(100);
+    }
+    if(checkEnd(row,col)) return count;
+    maze[row][col] = '@';
+    if (checkSpot(row,col-1)) {
+      temp = solve(row,col-1,count+1);
+      if (temp != -1) return temp;
+    }
+    if (checkSpot(row+1,col)) {
+      temp = solve(row+1,col,count+1);
+      if (temp != -1) return temp;
+    }
+    if (checkSpot(row-1,col)) {
+      temp = solve(row-1,col,count+1);
+      if (temp != -1) return temp;
+    }
+    if (checkSpot(row,col+1)) {
+      temp = solve(row,col+1,count+1);
+      if (temp != -1) return temp;
     }
     maze[row][col] = '.';
     return -1;
   }
 
   private boolean checkSpot(int row, int col) {
-    if (maze[row][col].equals(' ') || maze[row][col].equals('S')) {
-      maze[row][col] = '@';
+    if (maze[row][col] == ' ' || maze[row][col] == 'E') {
       return true;
     }
     return false;
   }
 
   private boolean checkEnd(int row, int col) {
-    if (maze[row][col].equals('E') {
-      setanimate(false);
+    if (maze[row][col] == 'E') {
+      setAnimate(false);
       return true;
+    }
+    return false;
   }
 
   public static void main(String[] args) {
     try {
-      Maze test = new Maze("Maze2.txt");
-      System.out.println(test);
+      Maze test = new Maze("Maze3.txt");
+      test.setAnimate(true);
+      System.out.println(test.solve());
+    //  System.out.println(test);
 
     }
     catch (FileNotFoundException e) {
       System.out.println("File not found");
     }
   }
-  }
-
-
-//count amt of lines
+}
