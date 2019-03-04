@@ -24,11 +24,9 @@ public class Maze {
     int height = 1; //because scan counts how many next lines there are, so assume there is one row by default
     int width = 0;  //even if there is no rows width is automatically 0
 
-    int check = 0;
     while(scan.hasNextLine()){
       String findWidth = scan.nextLine();
-      width = findWidth.length();
-      check = 1;
+      width = findWidth.length(); //takes in width of the next line, sets width of array to that as lengths are consistent
       height = height + 1;
     }
 
@@ -110,6 +108,7 @@ public class Maze {
           }
         }
       }
+    //instance variables hold the coordinates to be called in the solve() method
     startRow = rowS;
     startCol = colS;
   }
@@ -126,33 +125,50 @@ public class Maze {
   */
   private int solve(int row, int col, int count) {
     int temp;
+    //animation of the function
     if (animate) {
             clearTerminal();
             System.out.println(this);
             wait(100);
     }
+    //returns the number of @ signs when E is finally reached
     if(checkEnd(row,col)) return count;
+    //as you go through the maze, you set every tile you go to into an @ sign
     maze[row][col] = '@';
+    //checks the previous column
     if (checkSpot(row,col-1)) {
       temp = solve(row,col-1,count+1);
       if (temp != -1) return temp;
     }
+    //checks the next row
     if (checkSpot(row+1,col)) {
       temp = solve(row+1,col,count+1);
       if (temp != -1) return temp;
     }
+    //checks the previous row
     if (checkSpot(row-1,col)) {
       temp = solve(row-1,col,count+1);
       if (temp != -1) return temp;
     }
+    //checks the next column
     if (checkSpot(row,col+1)) {
       temp = solve(row,col+1,count+1);
       if (temp != -1) return temp;
     }
+    //if all four sides are not empty spaces then place a period
+    //logic: place @ signs on each tile visited
+    //       once you hit a wall, and you are surrounded by nonempty spaces, return -1
+    //       the tile is then replaced by a .
+    //       the previous tile that calls on the current tile via recursion: temp becomes -1
+    //       because temp = -1, does not return anything -> goes through rest of cases
+    //       it'll eventually reach the end case (if it isn't a fork), returns -1
+    //       cycle repeats until it backtracks to the previous fork
+    //       takes another path, repeats the cycle if it hits a dead end, if not, keeps going, once it hits E, returns count
     maze[row][col] = '.';
     return -1;
   }
 
+  //helper method checking if the spot is valid
   private boolean checkSpot(int row, int col) {
     if (maze[row][col] == ' ' || maze[row][col] == 'E') {
       return true;
@@ -160,6 +176,7 @@ public class Maze {
     return false;
   }
 
+  //helper method checking if E is reached
   private boolean checkEnd(int row, int col) {
     if (maze[row][col] == 'E') {
       setAnimate(false);
@@ -168,12 +185,24 @@ public class Maze {
     return false;
   }
 
+  //main method (testing)
   public static void main(String[] args) {
     try {
-      Maze test = new Maze("Maze3.txt");
+      Maze test = new Maze("Maze1.txt");
       test.setAnimate(true);
-      System.out.println(test.solve());
-    //  System.out.println(test);
+    //  System.out.println(test.solve());
+
+      Maze test2 = new Maze("Maze2.txt");
+      test2.setAnimate(true);
+    //  System.out.println(test2.solve());
+
+      Maze test3 = new Maze("Maze3.txt");
+      test3.setAnimate(true);
+    //  System.out.println(test3.solve());
+
+      Maze test4 = new Maze("Maze4.txt");
+      test4.setAnimate(true);
+    //  System.out.println(test4.solve());
 
     }
     catch (FileNotFoundException e) {
